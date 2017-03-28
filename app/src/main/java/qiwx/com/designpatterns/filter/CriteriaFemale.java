@@ -1,0 +1,25 @@
+package qiwx.com.designpatterns.filter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author: qiwx
+ * email: qiwx@jingzhengu.com
+ * @time: 2017/3/28 18:02
+ * @desc:
+ */
+
+public class CriteriaFemale implements Criteria {
+    @Override
+    public List<Person> meetCriteria(List<Person> persons) {
+        List<Person> femalePersons = new ArrayList<Person>();
+
+        for (Person person : persons) {
+            if(person.getGender().equalsIgnoreCase("FEMALE")){
+                femalePersons.add(person);
+            }
+        }
+        return femalePersons;
+    }
+}
