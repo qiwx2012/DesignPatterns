@@ -15,6 +15,7 @@ import qiwx.com.designpatterns.bridge.GreenCircle;
 import qiwx.com.designpatterns.bridge.RedCircle;
 import qiwx.com.designpatterns.builder.Meal;
 import qiwx.com.designpatterns.builder.MealBuilder;
+import qiwx.com.designpatterns.composite.Employee;
 import qiwx.com.designpatterns.factory.Shape;
 import qiwx.com.designpatterns.factory.ShapeFactory;
 import qiwx.com.designpatterns.filter.AndCriteria;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn6).setOnClickListener(this);
         findViewById(R.id.btn7).setOnClickListener(this);
         findViewById(R.id.btn8).setOnClickListener(this);
+        findViewById(R.id.btn9).setOnClickListener(this);
     }
 
     @Override
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn8:
                 List<Person> persons = new ArrayList<>();
 
-                persons.add(new Person("Robert","Male", "Single"));
+                persons.add(new Person("Robert", "Male", "Single"));
                 persons.add(new Person("John", "Male", "Married"));
                 persons.add(new Person("Laura", "Female", "Married"));
                 persons.add(new Person("Diana", "Female", "Single"));
@@ -129,10 +131,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 System.out.println("\nSingle Or Females: ");
                 break;
+            //组合模式
+            case R.id.btn9:
+                testComposite();
+
+                break;
         }
 
     }
-    public static void printPersons(List<Person> persons){
+
+    //组合模式类似与现实中的部门关系
+    private void testComposite() {
+        Employee CEO = new Employee("John", "CEO", 30000);
+
+        Employee headSales = new Employee("Robert", "Head Sales", 20000);
+
+        Employee headMarketing = new Employee("Michel", "Head Marketing", 20000);
+
+        Employee clerk1 = new Employee("Laura", "Marketing", 10000);
+        Employee clerk2 = new Employee("Bob", "Marketing", 10000);
+
+        Employee salesExecutive1 = new Employee("Richard", "Sales", 10000);
+        Employee salesExecutive2 = new Employee("Rob", "Sales", 10000);
+
+        CEO.add(headSales);
+        CEO.add(headMarketing);
+
+        headSales.add(salesExecutive1);
+        headSales.add(salesExecutive2);
+
+        headMarketing.add(clerk1);
+        headMarketing.add(clerk2);
+
+        //print all employees of the organization
+        System.out.println(CEO);
+
+        for (Employee headEmployee : CEO.getSubordinates()) {
+            System.out.println(headEmployee);
+
+            for (Employee employee : headEmployee.getSubordinates()) {
+                System.out.println(employee);
+            }
+        }
+
+
+    }
+
+    public static void printPersons(List<Person> persons) {
 
         for (Person person : persons) {
             System.out.println("Person : [ Name : " + person.getName() + ", Gender : " + person.getGender() + ", Marital Status : " + person.getMaritalStatus() + " ]");
