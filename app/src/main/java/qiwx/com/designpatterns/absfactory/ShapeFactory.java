@@ -1,8 +1,8 @@
 package qiwx.com.designpatterns.absfactory;
 
-import qiwx.com.designpatterns.factory.Circle;
-import qiwx.com.designpatterns.factory.Shape;
-import qiwx.com.designpatterns.factory.Square;
+import qiwx.com.designpatterns.common.Circle;
+import qiwx.com.designpatterns.common.Shape;
+import qiwx.com.designpatterns.common.Square;
 
 /**
  * @author: qiwx

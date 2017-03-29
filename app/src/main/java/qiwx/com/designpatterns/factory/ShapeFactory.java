@@ -1,5 +1,9 @@
 package qiwx.com.designpatterns.factory;
 
+import qiwx.com.designpatterns.common.Circle;
+import qiwx.com.designpatterns.common.Shape;
+import qiwx.com.designpatterns.common.Square;
+
 /**
  * @author: qiwx
  * email: qiwx@jingzhengu.com

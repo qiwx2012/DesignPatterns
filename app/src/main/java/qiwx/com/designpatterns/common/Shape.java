@@ -1,10 +1,10 @@
-package qiwx.com.designpatterns.factory;
+package qiwx.com.designpatterns.common;
 
 /**
  * @author: qiwx
  * email: qiwx@jingzhengu.com
- * @time: 2017/3/28 14:36
- * @desc: 形状接口
+ * @time: 2017/3/29 10:00
+ * @desc:
  */
 
 public interface Shape {

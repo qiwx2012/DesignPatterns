@@ -1,6 +1,6 @@
 package qiwx.com.designpatterns.absfactory;
 
-import qiwx.com.designpatterns.factory.Shape;
+import qiwx.com.designpatterns.common.Shape;
 
 /**
  * @author: qiwx

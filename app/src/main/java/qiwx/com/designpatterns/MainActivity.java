@@ -5,8 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import qiwx.com.designpatterns.Chain.AbstractLogger;
+import qiwx.com.designpatterns.Chain.ConsoleLogger;
+import qiwx.com.designpatterns.Chain.ErrorLogger;
+import qiwx.com.designpatterns.Chain.FileLogger;
 import qiwx.com.designpatterns.absfactory.AbsFactory;
 import qiwx.com.designpatterns.absfactory.FactoryProducer;
 import qiwx.com.designpatterns.adapter.AudioPlayer;
@@ -15,8 +20,15 @@ import qiwx.com.designpatterns.bridge.GreenCircle;
 import qiwx.com.designpatterns.bridge.RedCircle;
 import qiwx.com.designpatterns.builder.Meal;
 import qiwx.com.designpatterns.builder.MealBuilder;
+import qiwx.com.designpatterns.command.Broker;
+import qiwx.com.designpatterns.command.BuyStock;
+import qiwx.com.designpatterns.command.SellStock;
+import qiwx.com.designpatterns.command.Stock;
+import qiwx.com.designpatterns.common.Rectangle;
+import qiwx.com.designpatterns.common.Shape;
 import qiwx.com.designpatterns.composite.Employee;
-import qiwx.com.designpatterns.factory.Shape;
+import qiwx.com.designpatterns.decorator.RedShapeDecorator;
+import qiwx.com.designpatterns.facade.ShapeMaker;
 import qiwx.com.designpatterns.factory.ShapeFactory;
 import qiwx.com.designpatterns.filter.AndCriteria;
 import qiwx.com.designpatterns.filter.Criteria;
@@ -25,6 +37,15 @@ import qiwx.com.designpatterns.filter.CriteriaMale;
 import qiwx.com.designpatterns.filter.CriteriaSingle;
 import qiwx.com.designpatterns.filter.OrCriteria;
 import qiwx.com.designpatterns.filter.Person;
+import qiwx.com.designpatterns.flyweight.ShapFactory1;
+import qiwx.com.designpatterns.expression.AndExpression;
+import qiwx.com.designpatterns.expression.Expression;
+import qiwx.com.designpatterns.expression.OrExpression;
+import qiwx.com.designpatterns.expression.TerminalExpression;
+import qiwx.com.designpatterns.iterator.ConcreteAggregate;
+import qiwx.com.designpatterns.mediator.User;
+import qiwx.com.designpatterns.memento.CareTaker;
+import qiwx.com.designpatterns.memento.Originator;
 import qiwx.com.designpatterns.prototype.ShapeCache;
 import qiwx.com.designpatterns.singleton.SingleObtect;
 
@@ -43,6 +64,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn7).setOnClickListener(this);
         findViewById(R.id.btn8).setOnClickListener(this);
         findViewById(R.id.btn9).setOnClickListener(this);
+        findViewById(R.id.btn10).setOnClickListener(this);
+        findViewById(R.id.btn11).setOnClickListener(this);
+        findViewById(R.id.btn12).setOnClickListener(this);
+        findViewById(R.id.btn13).setOnClickListener(this);
+        findViewById(R.id.btn14).setOnClickListener(this);
+        findViewById(R.id.btn15).setOnClickListener(this);
+        findViewById(R.id.btn16).setOnClickListener(this);
+        findViewById(R.id.btn17).setOnClickListener(this);
+        findViewById(R.id.btn18).setOnClickListener(this);
     }
 
     @Override
@@ -134,10 +164,145 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //组合模式
             case R.id.btn9:
                 testComposite();
+                break;
+            //装饰器模式
+            case R.id.btn10:
+                Shape circle = new qiwx.com.designpatterns.common.Circle();
 
+                Shape redCircle1 = new RedShapeDecorator(circle);
+
+                Shape redRectangle = new RedShapeDecorator(new Rectangle());
+                System.out.println("正常图形");
+                circle.draw();
+
+                System.out.println("\n带描边圆形");
+                redCircle1.draw();
+
+                System.out.println("\n带描边三角形");
+                redRectangle.draw();
+                break;
+            //外观模式
+            case R.id.btn11:
+                ShapeMaker shapeMaker = new ShapeMaker();
+                shapeMaker.drawCircle();
+                shapeMaker.drawSquare();
+                break;
+            //享元模式
+            case R.id.btn12:
+                String colors[] = {"Red", "Green", "Blue", "White", "Black"};
+                for (int i = 0; i < 20; ++i) {
+                    qiwx.com.designpatterns.flyweight.Circle circle2 = (qiwx.com.designpatterns.flyweight.Circle) ShapFactory1.getCircle(colors[(int) (Math.random() * colors.length)]);
+                    circle2.setX((int) (Math.random() * 100));
+                    circle2.setY((int) (Math.random() * 100));
+                    circle2.setRadius(100);
+                    circle2.draw();
+                }
+                break;
+            //责任链模式
+            case R.id.btn13:
+
+                AbstractLogger loggerChain = getChainOfLoggers();
+
+                loggerChain.logMessage(AbstractLogger.INFO,
+                        " 这是一条标准信息");
+                loggerChain.logMessage(AbstractLogger.DEBUG,
+                        "这是一条degug信息");
+
+                loggerChain.logMessage(AbstractLogger.ERROR,
+                        "这是一条错误信息");
+                break;
+            //命令模式
+            case R.id.btn14:
+                Stock abcStock = new Stock();
+
+                BuyStock buyStockOrder = new BuyStock(abcStock);
+                SellStock sellStockOrder = new SellStock(abcStock);
+
+                Broker broker = new Broker();
+                broker.takeOrder(buyStockOrder);
+                broker.takeOrder(sellStockOrder);
+
+                broker.placeOrders();
+                break;
+            //解释器模式
+            case R.id.btn15:
+                Expression isMale = getMaleExpression();
+                Expression isMarriedWoman = getMarriedWomanExpression();
+
+                System.out.println("John is male? " + isMale.interpret("John"));
+                System.out.println("Julie is a married women? " + isMarriedWoman.interpret("Married Ju11lie"));
+                break;
+            //中介者模式
+            case R.id.btn16:
+                User robert = new User("Robert");
+                User john = new User("John");
+                robert.sendMessage("Hi! John!");
+                john.sendMessage("Hello! Robert!");
+                break;
+            //备忘录模式
+            case R.id.btn17:
+                Originator originator = new Originator();
+                CareTaker careTaker = new CareTaker();
+                originator.setState("State #1");
+                originator.setState("State #2");
+                //首次保存
+                careTaker.add(originator.saveStateToMemento());
+                originator.setState("State #3");
+                //二次保存
+                careTaker.add(originator.saveStateToMemento());
+                originator.setState("State #4");
+                System.out.println("Current State: " + originator.getState());
+
+                originator.getStateFromMemento(careTaker.get(0));
+                System.out.println("First saved State: " + originator.getState());
+                originator.getStateFromMemento(careTaker.get(1));
+                System.out.println("Second saved State: " + originator.getState());
+
+                break;
+            //迭代器
+            case R.id.btn18:
+                qiwx.com.designpatterns.iterator.List list=new ConcreteAggregate();
+                list.add("a");
+                list.add("b");
+                list.add("c");
+                list.add("d");
+                list.iterator();
+                qiwx.com.designpatterns.iterator.Iterator it=list.iterator();
+                while(it.hasNext()){
+                    System.out.println(it.next());
+                }
                 break;
         }
 
+    }
+
+
+    public Expression getMaleExpression(){
+        Expression robert = new TerminalExpression("Robert");
+        Expression john = new TerminalExpression("John");
+        return new OrExpression(robert, john);
+    }
+
+    //Rule: Julie is a married women
+    public  Expression getMarriedWomanExpression(){
+        Expression julie = new TerminalExpression("Julie");
+        Expression married = new TerminalExpression("Married");
+        return new AndExpression(julie, married);
+    }
+
+    //责任链
+    private AbstractLogger getChainOfLoggers() {
+
+        AbstractLogger errorLogger = new ErrorLogger(AbstractLogger.ERROR);
+        AbstractLogger fileLogger = new FileLogger(AbstractLogger.DEBUG);
+        AbstractLogger consoleLogger = new ConsoleLogger(AbstractLogger.INFO);
+
+        errorLogger.setNextLogger(fileLogger);
+        fileLogger.setNextLogger(consoleLogger);
+
+        return errorLogger;
+//        return consoleLogger;
+//        return fileLogger;
     }
 
     //组合模式类似与现实中的部门关系
