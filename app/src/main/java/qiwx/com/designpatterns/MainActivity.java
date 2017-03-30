@@ -46,8 +46,24 @@ import qiwx.com.designpatterns.iterator.ConcreteAggregate;
 import qiwx.com.designpatterns.mediator.User;
 import qiwx.com.designpatterns.memento.CareTaker;
 import qiwx.com.designpatterns.memento.Originator;
+import qiwx.com.designpatterns.observer.BinaryObserver;
+import qiwx.com.designpatterns.observer.HexaObserver;
+import qiwx.com.designpatterns.observer.Observer;
+import qiwx.com.designpatterns.observer.OctalObserver;
+import qiwx.com.designpatterns.observer.Subject;
 import qiwx.com.designpatterns.prototype.ShapeCache;
+import qiwx.com.designpatterns.proxy.People;
+import qiwx.com.designpatterns.proxy.TalkProxy;
 import qiwx.com.designpatterns.singleton.SingleObtect;
+import qiwx.com.designpatterns.state.Rain;
+import qiwx.com.designpatterns.state.Sunshine;
+import qiwx.com.designpatterns.strategy.Context;
+import qiwx.com.designpatterns.strategy.OperationAdd;
+import qiwx.com.designpatterns.strategy.OperationMultiply;
+import qiwx.com.designpatterns.strategy.OperationSubstract;
+import qiwx.com.designpatterns.template.Cricket;
+import qiwx.com.designpatterns.template.Football;
+import qiwx.com.designpatterns.template.Game;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,6 +89,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn16).setOnClickListener(this);
         findViewById(R.id.btn17).setOnClickListener(this);
         findViewById(R.id.btn18).setOnClickListener(this);
+        findViewById(R.id.btn19).setOnClickListener(this);
+        findViewById(R.id.btn20).setOnClickListener(this);
+        findViewById(R.id.btn21).setOnClickListener(this);
+        findViewById(R.id.btn22).setOnClickListener(this);
+        findViewById(R.id.btn23).setOnClickListener(this);
     }
 
     @Override
@@ -261,30 +282,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //迭代器
             case R.id.btn18:
-                qiwx.com.designpatterns.iterator.List list=new ConcreteAggregate();
+                qiwx.com.designpatterns.iterator.List list = new ConcreteAggregate();
                 list.add("a");
                 list.add("b");
                 list.add("c");
                 list.add("d");
                 list.iterator();
-                qiwx.com.designpatterns.iterator.Iterator it=list.iterator();
-                while(it.hasNext()){
+                qiwx.com.designpatterns.iterator.Iterator it = list.iterator();
+                while (it.hasNext()) {
                     System.out.println(it.next());
                 }
                 break;
+            //观察者模式
+            case R.id.btn19:
+                Subject subject = new Subject();
+                //一个十进制的数不同进制表示
+                Observer ho = new HexaObserver(subject);
+                Observer oo = new OctalObserver(subject);
+                Observer bo = new BinaryObserver(subject);
+                //订阅
+                ho.subscribe();
+                oo.subscribe();
+                bo.subscribe();
+                System.out.println("First state change: 15");
+                subject.setState(15);
+                //取消二进制订阅
+                bo.unSubscribe();
+                System.out.println("Second state change: 10");
+                subject.setState(10);
+                break;
+            //策略模式
+            case R.id.btn20:
+                Context context = new Context(new OperationAdd());
+                System.out.println("10 + 5 = " + context.executeStrategy(10, 5));
+
+                context = new Context(new OperationSubstract());
+                System.out.println("10 - 5 = " + context.executeStrategy(10, 5));
+
+                context = new Context(new OperationMultiply());
+                System.out.println("10 * 5 = " + context.executeStrategy(10, 5));
+                break;
+            //策略模式
+            case R.id.btn21:
+                qiwx.com.designpatterns.state.Context ct = new qiwx.com.designpatterns.state.Context();
+                ct.setState(new Rain());
+                System.out.println(ct.stateMessage());
+                ct.setState(new Sunshine());
+                System.out.println(ct.stateMessage());
+                break;
+            //模板模式
+            case R.id.btn22:
+                Game game = new Cricket();
+                game.play();
+                System.out.println();
+                game = new Football();
+                game.play();
+                break;
+            //代理模式
+            case R.id.btn23:
+                People people = new People();
+                people.talk("I can't sing");
+                TalkProxy proxy = new TalkProxy(people);
+                proxy.talk("I can talk");
+                proxy.sing("I can sing");
+                break;
+
         }
 
     }
 
 
-    public Expression getMaleExpression(){
+    public Expression getMaleExpression() {
         Expression robert = new TerminalExpression("Robert");
         Expression john = new TerminalExpression("John");
         return new OrExpression(robert, john);
     }
 
     //Rule: Julie is a married women
-    public  Expression getMarriedWomanExpression(){
+    public Expression getMarriedWomanExpression() {
         Expression julie = new TerminalExpression("Julie");
         Expression married = new TerminalExpression("Married");
         return new AndExpression(julie, married);
